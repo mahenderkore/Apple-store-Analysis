@@ -1,0 +1,95 @@
+
+select * from AppleStore;
+
+CREATE TABLE AppleStore_description AS 
+SELECT * from appleStore_description1
+UNION ALL
+select * from appleStore_description2
+UNION ALL
+SELECT * FROM appleStore_description3
+UNION ALL
+SELECT * FROM appleStore_description4 ;
+
+
+SELECT * FROM AppleStore;
+
+SELECT * from AppleStore_description;
+
+-- EXPLORATORY DATA ANALYSIS
+--  Data Consistency
+
+SELECT COUNT(DISTINCT id) as unique_records FROM AppleStore;
+
+SELECT Count(DISTINCT id) as unique_records from AppleStore_description;
+
+-- 7197 unique records available in both the tables
+
+-- Data Accuracy : Missing values count 
+
+SELECT COUNT(*) as missing_values
+FROM 
+	AppleStore
+WHERE id is NULL or track_name is NULL or user_rating is NULL;
+
+SELECT COUNT(*) as missing_values
+FROM
+	AppleStore_description
+WHERE id is NULL or track_name is NULL or app_desc IS NULL;
+
+
+SELECT prime_genre,COUNT(id) as app_count
+FROM 
+	AppleStore
+GROUP BY prime_genre
+order by app_count desc;
+-- Games and Entertainment are high competetive genres
+
+SELECT min(user_rating) as minimum_rating,max(user_rating) as maximum_rating
+FROM
+	AppleStore;
+-- minimum rating :0, maximum rating : 5
+
+-- Exploraory Data Analysis
+
+-- 1. Average rating of Paid vs Free pricing apps
+SELECT 
+case when price >0 then  "Paid"
+else "Free" END AS app_pricing,round(avg(user_rating),2) as average_rating
+from AppleStore
+GROUP BY app_pricing;
+
+-- so to develop new app, paid version should atleast target average rating of 3.5.
+
+-- 2. Rating vs no.of languages
+SELECT case when lang_num < 10 then "<10 languages"
+when lang_num BETWEEN 10 and 30 then "10-30 languages"
+else ">30 languages" end as languages,round(avg(user_rating),2) as average_rating
+from AppleStore
+GROUP by languages;
+--  choosing 10-30 languages can be optimum 
+-- 3. Rating vs Genre
+SELECT prime_genre,round(avg(user_rating),2) as average_rating
+from AppleStore
+group by prime_genre
+order by average_rating Asc; 
+-- Catalogue, Finance, and Books are low-rated genres
+-- 4. Top rated  app in each genre
+with cte as (
+select prime_genre,track_name,user_rating,
+rank() over (partition by prime_genre order by user_rating desc,rating_count_tot desc) as rnk
+from AppleStore)
+SELECT * from cte where rnk =1;
+
+
+-- 5.Rating vs App description
+select (case 
+			when length(b.app_desc) < 500 then "Short"
+            when length(b.app_desc) BETWEEN 500 and 1000 then "Medium"
+            else "Long" 
+            END ) as description,round(avg(user_rating),2) as average_rating
+FROM AppleStore a 
+inner join AppleStore_description b 
+on a.id = b.id
+group by description;
+-- Longer the description, higher the rating
+
