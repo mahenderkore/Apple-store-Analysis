@@ -92,4 +92,5 @@ inner join AppleStore_description b
 on a.id = b.id
 group by description;
 -- Longer the description, higher the rating
+-- Follow me 
 
