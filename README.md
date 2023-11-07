@@ -17,3 +17,4 @@ MySQL: For executing SQL scripts and deriving insights.
 3. 🌐 Supporting 10-30 languages appears to be the sweet spot for optimal app performance.
 4. 🎮 Games and entertainment apps top the download charts, while finance apps show a noteworthy pattern when comparing download counts against ratings.
 5. 📚 Genres like Catalogue, Finance, and Books are currently receiving lower ratings, signaling opportunities for improvement and innovation within these domains.
+<img width="300" alt="Screenshot 2023-11-04 101211" src="https://github.com/mahenderkore/Apple-store-Analysis/assets/124785788/196e2c30-bd3e-4117-8cbb-d5a4a432a48a">
